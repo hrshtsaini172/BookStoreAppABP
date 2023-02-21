@@ -1,0 +1,31 @@
+﻿@page
+@using Acme.BookStore.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using Microsoft.AspNetCore.Authorization
+@using Acme.BookStore.Permissions
+@using Acme.BookStore.Web.Pages.Books
+@using Microsoft.Extensions.Localization
+@model IndexModel
+@inject IAuthorizationService AuthorizationService
+@inject IStringLocalizer<BookStoreResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.MenuItemName = "BooksStore";
+    PageLayout.Content.Title = L["Books"].Value;
+}
+@section scripts
+    {
+    <abp-script src="/Pages/Books/Index.js" />
+}
+@section content_toolbar {
+    @if (await AuthorizationService.IsGrantedAsync(BookStorePermissions.Books.Create))
+    {
+        <abp-button id="NewBookButton" text="@L["NewBook"].Value" icon="plus" size="Small" button-type="Primary" />
+    }
+}
+
+<abp-card>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="BooksTable"></abp-table>
+    </abp-card-body>
+</abp-card>
